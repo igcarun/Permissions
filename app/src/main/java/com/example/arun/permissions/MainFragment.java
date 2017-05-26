@@ -2,13 +2,17 @@ package com.example.arun.permissions;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +35,7 @@ public class MainFragment extends BaseFragment implements PermissionStatusListen
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_main, null);
+        Log.i("MainFragment", "Main fragment called");
         return view;
     }
 
@@ -38,6 +43,7 @@ public class MainFragment extends BaseFragment implements PermissionStatusListen
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mParentLayout = (CoordinatorLayout) getView().findViewById(R.id.fragment_main_cl);
+        Log.i("MainFragment", "On Activity Created");
         permissionList();
     }
 
@@ -63,7 +69,10 @@ public class MainFragment extends BaseFragment implements PermissionStatusListen
         if (isPermissionsSuccess) {
             Toast.makeText(getContext(), "All permissions success", Toast.LENGTH_SHORT).show();
         } else {
-            requestPermission(this, stringList.toArray(new String[0]), PERMISSION_REQ_CODE);
+            PermissionHandler.getInstance().requestPermission(getActivity(), this)
+                    .setRequestPermissions(stringList.toArray(new String[0]))
+                    .setRequestCode(PERMISSION_REQ_CODE)
+                    .builder();
         }
     }
 
@@ -74,6 +83,7 @@ public class MainFragment extends BaseFragment implements PermissionStatusListen
             @Override
             public void onClick(View view) {
                 if (isTempDenied) {
+                    Log.i("MainFragment", "Show status message called");
                     permissionList();
                 } else {
                     Intent intent = new Intent();
@@ -95,7 +105,40 @@ public class MainFragment extends BaseFragment implements PermissionStatusListen
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == PERMISSION_SETTINGS_REQ_CODE) {
+            Log.i("MainFragment", "on Activity Result called");
             permissionList();
         }
     }
+
+    /*public boolean isPermissionSuccess(String permission) {
+        return ContextCompat.checkSelfPermission(getContext(), permission) == 0;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        boolean isTempDenied = false;
+        boolean isPermDenied = false;
+        for (String permission : permissions) {
+            if (shouldShowRequestPermissionRationale(permission)) {
+                isTempDenied = true;
+            } else {
+                if (ContextCompat.checkSelfPermission(getContext(),permission) == PackageManager.PERMISSION_GRANTED) {
+                    Log.e("allowed", permission);
+                } else {
+                    //set to never ask again
+                    isPermDenied = true;
+                    Log.e("set to never ask again", permission);
+                    //do something here.
+                }
+            }
+        }
+
+        if (isTempDenied) {
+            showStatusMsg(isTempDenied);
+        } else if (isPermDenied) {
+            showStatusMsg(isTempDenied);
+        } else {
+            onSuccessStatusMsg();
+        }
+    }*/
 }

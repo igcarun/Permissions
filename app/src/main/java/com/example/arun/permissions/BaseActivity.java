@@ -17,22 +17,23 @@ public class BaseActivity extends AppCompatActivity {
 
     private int mReqCode;
     private PermissionStatusListener mPermissionStatusListener;
-    /**
-     * this method handle request permission for an activity
-     *
-     * @param permission array of permissions
-     * @param reqCode    request code for an permissions
-     */
-    public void requestPermission(PermissionStatusListener permissionStatusListeners,
+      /**
+       * this method handle request permission for an activity
+       *
+       * @param permission array of permissions
+       * @param reqCode    request code for an permissions
+       */
+   /* public void requestPermission(PermissionStatusListener permissionStatusListeners,
                                   String[] permission, int reqCode) {
         mPermissionStatusListener = permissionStatusListeners;
         mReqCode = reqCode;
         ActivityCompat.requestPermissions(this, permission, reqCode);
-    }
+    }*/
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        boolean isTempDenied = false;
+        PermissionHandler.getInstance().onRequestPermissionsResult(requestCode, permissions, grantResults);
+        /*boolean isTempDenied = false;
         boolean isPermDenied = false;
         for (String permission : permissions) {
             if (ActivityCompat.shouldShowRequestPermissionRationale(this, permission)) {
@@ -55,7 +56,7 @@ public class BaseActivity extends AppCompatActivity {
             mPermissionStatusListener.showStatusMsg(isTempDenied);
         } else {
             mPermissionStatusListener.onSuccessStatusMsg();
-        }
+        }*/
 
     }
 
