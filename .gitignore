@@ -65,3 +65,7 @@ freeline.py
 freeline/
 freeline_project_description.json
 >>>>>>> 265a8d5f4ece62d205234b897302477cdecad3d1
+
+
+#Remove tested files (e.g. TestActivity)
+app/src/main/java/com.example.arun.permissions.TestActivity
